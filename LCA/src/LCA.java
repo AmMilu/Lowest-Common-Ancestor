@@ -60,11 +60,10 @@ public class LCA {
     //The code above are all to support.
     
     public int lca(Node node, int a, int b) {
-		
-		if(node == null) {
-			return 0;
-		}
-		
+    	
+    	//if there is no node with value a or b, return 0, representing the lca is not found. the person is not in the family.
+    	if(!search(node,a) || !search(node,b))   return 0;
+    	
 		//a<root.data & b<root.data, which means the lca is in the left branch
 		if(a<node.value && b<node.value) {
 			return lca(node.left, a, b);

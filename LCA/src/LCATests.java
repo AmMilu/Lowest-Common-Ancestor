@@ -1,7 +1,8 @@
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Test;
+import org.junit.*;
 
 public class LCATests {
 	
@@ -17,29 +18,35 @@ public class LCATests {
 	 *                 21
 	 */
 	
-	LCA testTree;
+	LCA testTree = new LCA();
 	
+	@Before
 	public void setup() {
-		testTree = new LCA();
-		testTree.add(10);
-		testTree.add(6);
-		testTree.add(3);
-		testTree.add(1);
-		testTree.add(8);
-		testTree.add(9);
-		testTree.add(4);
-		testTree.add(15);
-		testTree.add(12);
-		testTree.add(17);
-		testTree.add(16);
-		testTree.add(20);
-		testTree.add(21);
+		testTree.insert(10);
+		testTree.insert(6);
+		testTree.insert(15);
+		testTree.insert(3);
+		testTree.insert(8);
+		testTree.insert(12);
+		testTree.insert(17);
+		testTree.insert(4);
+		testTree.insert(16);
+		testTree.insert(20);
+		testTree.insert(1);
+		testTree.insert(9);
+		testTree.insert(21);
 	}
-	 
+	
 	@Test
-    public void lcaTest () {
-		 
-    }
-	    
-
+	public void testSearch() {
+		//test the nodes exist in the tree
+		assertTrue(testTree.search(testTree.root,10));
+		assertTrue(testTree.search(testTree.root,6));
+		assertTrue(testTree.search(testTree.root,20));
+		//test the nodes not exist in the tree
+		assertFalse(testTree.search(testTree.root,25));
+		assertFalse(testTree.search(testTree.root,7));
+		assertFalse(testTree.search(testTree.root,13));
+	}
+	
 }

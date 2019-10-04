@@ -1,58 +1,68 @@
 public class LCA {
+	
+	class Node {
+        int value;
+        Node left;
+        Node right;
+
+        public Node(int value) {
+            this.value = value;
+            right = null;
+            left = null;
+        }
+    }
 
     Node root;
-
-    public Node getRoot() {
-		return root;
-	}
-
-	public void add(int value) {
-        root = addRecursive(root, value);
+    
+    LCA(){
+    	root = null;
     }
 
-    private Node addRecursive(Node current, int value) {
+    // This method mainly calls insertRec() 
+    void insert(int value) { 
+       root = insertRec(root, value); 
+    } 
+      
+    /* A recursive function to insert a new key in BST */
+    Node insertRec(Node root, int value) { 
+  
+        /* If the tree is empty, return a new node */
+        if (root == null) { 
+            root = new Node(value); 
+            return root; 
+        } 
+  
+        /* Otherwise, search the tree to find the place to insert*/
+        if (value < root.value) 
+            root.left = insertRec(root.left, value); 
+        else if (value > root.value) 
+            root.right = insertRec(root.right, value); 
+  
+        /* return the (unchanged) node pointer */
+        return root; 
+    } 
 
-        if (current == null) {
-            return new Node(value);
-        }
-
-        if (value < current.value) {
-            current.left = addRecursive(current.left, value);
-        } else if (value > current.value) {
-            current.right = addRecursive(current.right, value);
-        }
-
-        return current;
-    }
-
-    public boolean containsNode(int value) {
-        return containsNodeRecursive(root, value);
-    }
-
-    private boolean containsNodeRecursive(Node current, int value) {
-        boolean result = true;
-    	if (current == null) {
-            result = false;
-        }
-        if (value == current.value) {
-            result = true;
-        }
-        if(value < current.value) {
-        	result = containsNodeRecursive(current.left,value);
-        }
-        if(value > current.value) {
-        	result = containsNodeRecursive(current.right, value);
-        }
-        return result;
-    }
+    public boolean search(Node root, int value) 
+    { 
+        // Base Cases: root is null or value is present at root 
+        if(root == null) return false;
+        if(root.value == value) return true;
+      
+        // value is greater than root's value 
+        if (root.value > value) 
+            return search(root.left, value); 
+      
+        // value is less than root's value 
+        return search(root.right, value); 
+    } 
     
     //The code below is what is required in the question.
     //The code above are all to support.
     
-    Node lca(Node node, int a, int b) {
+    public int lca(Node node, int a, int b) {
 		
 		if(node == null) {
-			return null;
+			return 0;
 		}
 		
 		//a<root.data & b<root.data, which means the lca is in the left branch
@@ -67,18 +77,6 @@ public class LCA {
 		
 		//if a<node.data && b>node.data, then the current node is the lca
 		//if a or b is equal to node.data, then the current node is the lca
-		return node;
+		return node.value;
 	}
-
-    class Node {
-        int value;
-        Node left;
-        Node right;
-
-        Node(int value) {
-            this.value = value;
-            right = null;
-            left = null;
-        }
-    }
 }

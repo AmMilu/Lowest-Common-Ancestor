@@ -41,6 +41,18 @@ public class LCA2<V> {
         }
         return result;
     }
+    
+    //Report (as a Map) the out-degree of each vertex.
+
+    public Map<V,Integer> outDegree () {
+
+        Map<V,Integer> result = new HashMap<V,Integer>();
+
+        for (V v: map.keySet()) result.put(v, map.get(v).size());
+
+        return result;
+
+    }
 
     //Report (as a List) the topological sort of the vertices; null for no such sort.
     public List<V> topSort () {
@@ -69,7 +81,43 @@ public class LCA2<V> {
         return result;
     }
     
+    //Return (as a Map) the bfs distance to each vertex from the start vertex.
+    public Map bfs (V start) {
+        Map<V,Integer> distance = new HashMap<V,Integer>();
+        
+        // Initially, all distance are infinity, except start node
+        for (V v: map.keySet()) 
+        	distance.put(v, null);
+        distance.put(start, 0);
+        
+        // Process nodes in queue order
+        Queue<V> queue = new LinkedList<V>();
+        queue.add(start);                               
+        while (!queue.isEmpty()) {
+            V v = queue.remove();
+            int vDist = distance.get(v);
+            
+            // Update neighbors
+            for (V neighbor: map.get(v)) {
+                if (distance.get(neighbor) != null) continue;  // Ignore if already done
+                distance.put(neighbor, vDist + 1);
+                queue.add(neighbor);
+            }
+        }
+        return distance;
+    }
     
+    //check if the graph is directed acylic graph, return false if there is a cycle
+    public boolean isDag () {
+        return topSort() != null;
+    }
+    
+    //find the lowest common ancestor
+    public int lca(V v, V w){
+    	assert(isDag());
+    	
+    	return -1;
+    }
 
 }
 

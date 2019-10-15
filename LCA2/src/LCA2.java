@@ -41,18 +41,6 @@ public class LCA2<V> {
         }
         return result;
     }
-    
-    //Report (as a Map) the out-degree of each vertex.
-
-    public Map<V,Integer> outDegree () {
-
-        Map<V,Integer> result = new HashMap<V,Integer>();
-
-        for (V v: map.keySet()) result.put(v, map.get(v).size());
-
-        return result;
-
-    }
 
     //Report (as a List) the topological sort of the vertices; null for no such sort.
     public List<V> topSort () {
@@ -81,42 +69,75 @@ public class LCA2<V> {
         return result;
     }
     
-    //Return (as a Map) the bfs distance to each vertex from the start vertex.
-    public Map bfs (V start) {
-        Map<V,Integer> distance = new HashMap<V,Integer>();
-        
-        // Initially, all distance are infinity, except start node
-        for (V v: map.keySet()) 
-        	distance.put(v, null);
-        distance.put(start, 0);
-        
-        // Process nodes in queue order
-        Queue<V> queue = new LinkedList<V>();
-        queue.add(start);                               
-        while (!queue.isEmpty()) {
-            V v = queue.remove();
-            int vDist = distance.get(v);
-            
-            // Update neighbors
-            for (V neighbor: map.get(v)) {
-                if (distance.get(neighbor) != null) continue;  // Ignore if already done
-                distance.put(neighbor, vDist + 1);
-                queue.add(neighbor);
-            }
-        }
-        return distance;
-    }
-    
     //check if the graph is directed acylic graph, return false if there is a cycle
     public boolean isDag () {
         return topSort() != null;
     }
     
-    //find the lowest common ancestor
-    public int lca(V v, V w){
-    	assert(isDag());
+    //given a vertex and return the map(vertex, depth) of the given vertex's parent
+    public Map parents(V a) {
+    	Map<V, Integer> parent = new HashMap<V, Integer>();
+    	Map<V, Integer> degree = inDegree();
+    	int depth = 0;
     	
-    	return -1;
+    	for(V v: map.keySet()) {
+    		//find the root, a root is a vertex whose indegree is 0
+    		if(degree.get(v) == 0) {
+    			parent.put(v, 0);
+    			findParents(v, parent, a, depth);
+    		}
+    	}
+    	return parent;
+    }
+    
+    private V findParents(V root, Map<V, Integer> parent, V a, int depth) {
+    	V v = null;
+    	if(root == null) return null;
+    	if(root.equals(a)) {
+    		parent.put(root, depth);
+    		return root;
+    	}
+    	List<V> child = new ArrayList<V>();
+    	for(int i = 0; i<map.get(root).size(); i++) {
+    		child.add(null);
+    	}
+    	for(int i = 0; i<map.get(root).size();i++) {
+    		child.set(i, findParents(map.get(root).get(i),parent,a,depth+1));
+    	}
+    	for(int i=0; i<map.get(root).size(); i++) {
+    		if(child.get(i) != null) {
+    			//if(!parent.containsKey(root)) {
+    			parent.put(root, depth);
+    			return findParents(map.get(root).get(i),parent,a,depth+1);
+    			//}
+    		}
+    	}
+    	return v;
+    }
+    
+    //find the lca of two vertices
+    public List<V> lca(V a, V b) {
+    	List<V> lca = new ArrayList<V>();
+    	int depth = 0;
+    	Map<V, Integer> parentA = parents(a);
+    	Map<V, Integer> parentB = parents(b);
+    	
+    	//compare the parents of the two nodes
+    	for(V va: parentA.keySet()) {
+    		for(V vb: parentB.keySet()) {
+    			
+    			//if there are same nodes in both maps, choose the deepest one and add to the lca list
+    			//lca might be more than one
+    			if(va.equals(vb) && depth <= parentA.get(va)) {
+    				if(depth < parentA.get(va)) {
+    					lca.clear();
+    				}
+    				lca.add(va);
+    				depth = parentA.get(va);
+    			}
+    		}
+    	}
+    	return lca;
     }
 
 }

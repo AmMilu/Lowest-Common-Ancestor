@@ -95,30 +95,6 @@ public class LCA2Test {
 	}
 	
 	@Test
-	public void testOutDegree() {
-		//create expected map
-		Map<Integer,Integer> expected = new HashMap<Integer, Integer>();
-		expected.put(1, 2);
-		expected.put(2, 3);
-		expected.put(3, 1);
-		expected.put(4, 1);
-		expected.put(5, 2);
-		expected.put(6, 2);
-		expected.put(7, 3);
-		expected.put(8, 3);
-		expected.put(9, 0);
-		expected.put(10, 0);
-		expected.put(11, 0);
-		expected.put(12, 0);
-		expected.put(13, 0);
-		
-		//test
-		assertNotNull(testGraph.outDegree());
-		assertNotNull(expected);
-		assertEquals(testGraph.outDegree(),expected);
-	}
-	
-	@Test
 	public void testTopSort() {
 		//create expected topsort list
 		List<Integer> expected = new ArrayList<Integer>();
@@ -150,28 +126,85 @@ public class LCA2Test {
 	}
 	
 	@Test
-	public void testBfs() {
+	public void testParents() {
 		//create expected map
-		Map <Integer, Integer> expected = new HashMap<Integer, Integer>();
+		Map<Integer,Integer> expected = new HashMap<Integer, Integer>();
+		expected.put(1,0);
+		expected.put(2,1);
+		expected.put(3,2);
+		expected.put(5,3);
+		
+		//test the parents of vertex 5
+		assertNotNull(testGraph.parents(5));
+		assertNotNull(expected);
+		assertEquals(testGraph.parents(5),expected);
+		
+		//test the parents of vertex 9
+		expected.clear();
 		expected.put(1, 0);
 		expected.put(2, 1);
 		expected.put(3, 2);
-		expected.put(4, 2);
+		expected.put(4, 5);
 		expected.put(5, 3);
 		expected.put(6, 4);
 		expected.put(7, 1);
 		expected.put(8, 2);
-		expected.put(9, 3);
-		expected.put(10, 4);
-		expected.put(11, 2);
-		expected.put(12, 2);
-		expected.put(13, 2);
+		expected.put(9, 6);
 		
-		//test start from the root node 1
-		assertNotNull(testGraph.bfs(1));
+		assertNotNull(testGraph.parents(9));
 		assertNotNull(expected);
-		assertEquals(testGraph.bfs(1),expected);
+		assertEquals(testGraph.parents(9),expected);
+	}
+	
+	@Test
+	public void testLca() {
+		//create expected List
+		List<Integer> expected = new ArrayList<Integer>();
 		
+		//test1 vertex 3 and vertex 11 lca is 2
+		expected.add(2);
+		
+		assertEquals(testGraph.lca(3, 11),expected);
+		
+		//test2 vertex 5 and vertex 9 lca is 5
+		expected.clear();
+		expected.add(5);
+		assertEquals(testGraph.lca(5, 9),expected);
+		
+		//test3 vertex 4 and vertex 8 lca is 1
+		expected.clear();
+		expected.add(1);
+		assertEquals(testGraph.lca(4,8),expected);
+		
+		//test4 vertex 3 and vertex 4 lca is 3
+		expected.clear();
+		expected.add(3);
+		assertEquals(testGraph.lca(3, 4),expected);
+		
+		//test5 vertex 10 and vertex 9 lca is 5
+		expected.clear();
+		expected.add(5);
+		assertEquals(testGraph.lca(9, 10),expected);
+		
+		//test6 vertex 10 and vertex 11 lca is 2
+		expected.clear();
+		expected.add(2);
+		assertEquals(testGraph.lca(10, 11),expected);
+		
+		//test7 vertex 8, vertex 13 lca is 8
+		expected.clear();
+		expected.add(8);
+		assertEquals(testGraph.lca(8, 13),expected);
+		
+		//test5 vertex 12 and vertex 13 lca is 7 and 8
+		expected.clear();
+		expected.add(7);
+		expected.add(8);
+		
+		System.out.println(testGraph.parents(12));
+		System.out.println(testGraph.parents(13));
+		System.out.print(testGraph.lca(12,13));
+		assertEquals(testGraph.lca(12,13),expected); //TODO
 	}
 
 }

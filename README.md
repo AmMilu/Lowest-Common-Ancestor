@@ -13,14 +13,14 @@ To run the binary tree tests in LCA2 solution, I copied and pasted the tests to 
 
 In DAG's tests, which is in LCA2 file, there are few more functions to support the Graph structure, so a few more tests were added to test all the funtions. In each function, there are two parts, the first parts is to test the DAG created in the tests and the second part is to test the previous binary tree. Arrows are added in binary tree graph to change it into a DAG. 
 
-#For LCA (binary tree solution) file
+# For LCA (binary tree solution) file
 the tests are:
 1. constructor
 2. insert
 3. search
 4. lca
 
-#For LCA2 (Directed Acylic Graph solution) file
+# For LCA2 (Directed Acylic Graph solution) file
 the tests are:
 1. constructor (for BT testTree is created, for DAG testGraph is created. both are used for all the tests)
 2. contains

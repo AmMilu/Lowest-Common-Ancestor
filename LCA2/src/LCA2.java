@@ -10,15 +10,19 @@ public class LCA2<V> {
 
     private Map<V,List<V>> map = new HashMap<V,List<V>>();
 
-    //Add a vertex to the graph.  Nothing happens if vertex is already in graph.
+    public Map<V,List<V>> getMap() {
+		return map;
+	}
+
+	//Add a vertex to the graph.  Nothing happens if vertex is already in graph.
     public void add(V vertex) {
-        if (map.containsKey(vertex)) return;
-        map.put(vertex, new ArrayList<V>());
+        if (getMap().containsKey(vertex)) return;
+        getMap().put(vertex, new ArrayList<V>());
     }
 
     //check if the vertex is already in graph
     public boolean contains (V vertex) {
-        return map.containsKey(vertex);
+        return getMap().containsKey(vertex);
     }
 
     //Add an edge to the graph
@@ -26,16 +30,16 @@ public class LCA2<V> {
         if(from != to) {
         	this.add(from); 
         	this.add(to);
-        	map.get(from).add(to);
+        	getMap().get(from).add(to);
         }
     }
 
     //Report (as a Map) the in-degree of each vertex.
     public Map<V,Integer> inDegree () {
         Map<V,Integer> result = new HashMap<V,Integer>();
-        for (V v: map.keySet()) result.put(v, 0);       // All in-degrees are 0
-        for (V from: map.keySet()) {
-            for (V to: map.get(from)) {
+        for (V v: getMap().keySet()) result.put(v, 0);       // All in-degrees are 0
+        for (V from: getMap().keySet()) {
+            for (V to: getMap().get(from)) {
                 result.put(to, result.get(to) + 1);           // Increment in-degree
             }
         }
@@ -58,14 +62,14 @@ public class LCA2<V> {
             V v = stack.pop();                  
             result.add(v);                   // put 0 degree vertics in topol order
             //deal with other vertices whose degree are not 0
-            for (V neighbor: map.get(v)) {
+            for (V neighbor: getMap().get(v)) {
                 degree.put(neighbor, degree.get(neighbor) - 1);
                 if (degree.get(neighbor) == 0) stack.push(neighbor);
             }
         }
         
         // Check that we have used the entire graph (if not, there was a cycle)
-        if (result.size() != map.size()) return null;
+        if (result.size() != getMap().size()) return null;
         return result;
     }
     
@@ -80,7 +84,7 @@ public class LCA2<V> {
     	Map<V, Integer> degree = inDegree();
     	int depth = 0;
     	
-    	for(V v: map.keySet()) {
+    	for(V v: getMap().keySet()) {
     		//find the root, a root is a vertex whose indegree is 0
     		if(degree.get(v) == 0) {
     			parent.put(v, 0);
@@ -98,17 +102,17 @@ public class LCA2<V> {
     		return root;
     	}
     	List<V> child = new ArrayList<V>();
-    	for(int i = 0; i<map.get(root).size(); i++) {
+    	for(int i = 0; i<getMap().get(root).size(); i++) {
     		child.add(null);
     	}
-    	for(int i = 0; i<map.get(root).size();i++) {
-    		child.set(i, findParents(map.get(root).get(i),parent,a,depth+1));
+    	for(int i = 0; i<getMap().get(root).size();i++) {
+    		child.set(i, findParents(getMap().get(root).get(i),parent,a,depth+1));
     	}
-    	for(int i=0; i<map.get(root).size(); i++) {
+    	for(int i=0; i<getMap().get(root).size(); i++) {
     		if(child.get(i) != null) {
     			//if(!parent.containsKey(root)) {
     			parent.put(root, depth);
-    			return findParents(map.get(root).get(i),parent,a,depth+1);
+    			return findParents(getMap().get(root).get(i),parent,a,depth+1);
     			//}
     		}
     	}

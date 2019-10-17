@@ -48,6 +48,7 @@ public class LCA2Test {
 		testGraph.add(8,12);
 		testGraph.add(7,13);
 		testGraph.add(8,13);
+		testGraph.add(12,12);
 	}
 	
 	@Test
@@ -154,6 +155,7 @@ public class LCA2Test {
 		assertNotNull(testGraph.parents(9));
 		assertNotNull(expected);
 		assertEquals(testGraph.parents(9),expected);
+		
 	}
 	
 	@Test
@@ -196,15 +198,66 @@ public class LCA2Test {
 		expected.add(8);
 		assertEquals(testGraph.lca(8, 13),expected);
 		
-		//test5 vertex 12 and vertex 13 lca is 7 and 8
+		//test8 vertex 12 and vertex 13 lca is 8 because 8 is still 7's child
 		expected.clear();
-		expected.add(7);
 		expected.add(8);
 		
-		System.out.println(testGraph.parents(12));
-		System.out.println(testGraph.parents(13));
-		System.out.print(testGraph.lca(12,13));
-		assertEquals(testGraph.lca(12,13),expected); //TODO
+		assertEquals(testGraph.lca(12,13),expected); 
+		
+		//test 9 add vertex 14, points to 2 and 7
+		//then the lca of 2 and 7 is 1 and 14
+		testGraph.add(14, 2);
+		testGraph.add(14,7);
+		
+		expected.clear();
+		expected.add(1);
+		expected.add(14);
+		
+		assertTrue(testGraph.isDag());   //make sure there is no cycle first
+		assertEquals(testGraph.lca(2, 7),expected);
+		
+		//test10 add vertex 15, points to 14
+		//the lca of 2 and 7 should not change
+		//but it might be changed to 14 no 1 any more
+		testGraph.add(15,14);
+		
+		expected.clear();
+		expected.add(14);
+		
+		assertTrue(testGraph.isDag());
+		assertEquals(testGraph.lca(2, 7), expected);
+		
+		//thoughts: there are two roots in the DAG right now. though vertex 1 and 14 are both 
+		//          common ancestors for vertex 2 and 7, but compare the depth, depth of 14 is
+		//          2 and depth of 1 is 1. So the program choose 14 to be the "lowest" common ancestor
+		
+		//So, now, what about other nodes, anything changed?
+		//repeat test 1 - passed
+		expected.clear();
+		expected.add(2);
+		
+		assertEquals(testGraph.lca(3, 11),expected);
+		
+		//repeat test 4 -passed
+		expected.clear();
+		expected.add(3);
+		assertEquals(testGraph.lca(3, 4),expected);
+		
+		//repeat test 7 -passed
+		expected.clear();
+		expected.add(2);
+		assertEquals(testGraph.lca(10, 11),expected);
+		
+		//repeat test 8 -passed
+		expected.clear();
+		expected.add(8);
+		
+		assertEquals(testGraph.lca(12,13),expected); 
+		
+		//conclusion: there is a bit confusion about the definition of LCA, from my understanding, 
+		//            the lowest common ancestor for vertex a and b is common ancestors which have
+		//			  the highest depth, regardless how many roots there are.
+		
 	}
 
 }

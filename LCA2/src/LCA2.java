@@ -126,6 +126,10 @@ public class LCA2<V> {
     	Map<V, Integer> parentA = parents(a);
     	Map<V, Integer> parentB = parents(b);
     	
+    	if(!contains(a)||!contains(b)) {
+    		return null;
+    	}
+    	
     	//compare the parents of the two nodes
     	for(V va: parentA.keySet()) {
     		for(V vb: parentB.keySet()) {
